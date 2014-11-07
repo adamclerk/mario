@@ -1,4 +1,4 @@
-package lib
+package cmd
 
 import (
 	"io"
@@ -23,7 +23,7 @@ func TestCSVTemplatePrint(t *testing.T) {
 		r, w := io.Pipe()
 		go func() {
 			cmd := csvTemplate{line: test.line, writer: w, template: test.template, separator: ","}
-			cmd.print()
+			cmd.Print()
 			w.Close()
 		}()
 		result, _ := ioutil.ReadAll(r)

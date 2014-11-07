@@ -11,13 +11,13 @@ import (
 	"github.com/codegangsta/cli"
 )
 
-type task interface {
-	process()
-	print()
+type Task interface {
+	Process()
+	Print()
 }
 
 type factory interface {
-	make(line string, context *cli.Context) task
+	Make(line string, context *cli.Context) Task
 }
 
 func Run(f factory, c *cli.Context) {
@@ -30,13 +30,13 @@ func Run(f factory, c *cli.Context) {
 
 	var wg sync.WaitGroup
 
-	in := make(chan task)
+	in := make(chan Task)
 
 	wg.Add(1)
 	go func() {
 		s := bufio.NewScanner(os.Stdin)
 		for s.Scan() {
-			in <- f.make(s.Text(), c)
+			in <- f.Make(s.Text(), c)
 		}
 		if s.Err() != nil {
 			log.Fatalf("Error reading STDIN: %s", s.Err())
@@ -45,13 +45,13 @@ func Run(f factory, c *cli.Context) {
 		wg.Done()
 	}()
 
-	out := make(chan task)
+	out := make(chan Task)
 
 	for i := 0; i < 1000; i++ {
 		wg.Add(1)
 		go func() {
 			for t := range in {
-				t.process()
+				t.Process()
 				out <- t
 			}
 			wg.Done()
@@ -64,7 +64,7 @@ func Run(f factory, c *cli.Context) {
 	}()
 
 	for t := range out {
-		t.print()
+		t.Print()
 	}
 }
 

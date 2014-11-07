@@ -1,4 +1,4 @@
-package lib
+package cmd
 
 import (
 	"io"
@@ -22,7 +22,7 @@ func TestDebugPrint(t *testing.T) {
 		r, w := io.Pipe()
 		go func() {
 			cmd := debug{line: test.line, writer: w}
-			cmd.print()
+			cmd.Print()
 			w.Close()
 		}()
 		result, _ := ioutil.ReadAll(r)

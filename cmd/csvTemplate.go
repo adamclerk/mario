@@ -1,4 +1,4 @@
-package lib
+package cmd
 
 import (
 	"io"
@@ -6,6 +6,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/adamclerk/mario/lib"
 	"github.com/codegangsta/cli"
 )
 
@@ -18,7 +19,7 @@ type csvTemplate struct {
 	writer    io.Writer
 }
 
-func (f *csvTemplateFactory) make(line string, context *cli.Context) task {
+func (f *csvTemplateFactory) Make(line string, context *cli.Context) lib.Task {
 	return &csvTemplate{
 		line:      line,
 		writer:    os.Stdout,
@@ -27,13 +28,13 @@ func (f *csvTemplateFactory) make(line string, context *cli.Context) task {
 	}
 }
 
-func (d *csvTemplate) print() {
+func (d *csvTemplate) Print() {
 	values := strings.Split(d.line, d.separator)
 	tmpl, _ := template.New("csv").Parse(d.template + "\n")
 	tmpl.Execute(d.writer, values)
 }
 
-func (d *csvTemplate) process() {
+func (d *csvTemplate) Process() {
 	return
 }
 
@@ -44,7 +45,7 @@ func AddCSVTemplate() cli.Command {
 		Usage:     "change csv input",
 		Action: func(c *cli.Context) {
 			d := csvTemplateFactory{}
-			Run(&d, c)
+			lib.Run(&d, c)
 		},
 		Flags: []cli.Flag{
 			cli.StringFlag{

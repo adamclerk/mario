@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/adamclerk/mario/lib"
+	"github.com/adamclerk/mario/cmd"
 	"github.com/codegangsta/cli"
 )
 
@@ -12,8 +12,8 @@ func main() {
 	app.Name = "mario"
 	app.Usage = "mama-mia I love pipes. Pipe input to me and I'll do amazing things."
 	app.Commands = []cli.Command{
-		lib.AddDebug(),
-		lib.AddCSVTemplate(),
+		cmd.AddDebug(),
+		cmd.AddCSVTemplate(),
 	}
 	app.Run(os.Args)
 }

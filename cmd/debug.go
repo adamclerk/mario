@@ -1,10 +1,11 @@
-package lib
+package cmd
 
 import (
 	"fmt"
 	"io"
 	"os"
 
+	"github.com/adamclerk/mario/lib"
 	"github.com/codegangsta/cli"
 )
 
@@ -15,15 +16,15 @@ type debug struct {
 	writer io.Writer
 }
 
-func (f *debugFactory) make(line string, context *cli.Context) task {
+func (f *debugFactory) Make(line string, context *cli.Context) lib.Task {
 	return &debug{line: line, writer: os.Stdout}
 }
 
-func (d *debug) print() {
+func (d *debug) Print() {
 	fmt.Fprintln(d.writer, d.line)
 }
 
-func (d *debug) process() {
+func (d *debug) Process() {
 	return
 }
 
@@ -34,7 +35,7 @@ func AddDebug() cli.Command {
 		Usage:     "just pass the line through",
 		Action: func(c *cli.Context) {
 			d := debugFactory{}
-			Run(&d, c)
+			lib.Run(&d, c)
 		},
 	}
 }
