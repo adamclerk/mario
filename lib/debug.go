@@ -2,9 +2,10 @@ package lib
 
 import (
 	"fmt"
-	"github.com/codegangsta/cli"
 	"io"
 	"os"
+
+	"github.com/codegangsta/cli"
 )
 
 type debugFactory struct{}
@@ -19,7 +20,6 @@ func (f *debugFactory) make(line string, context *cli.Context) task {
 }
 
 func (d *debug) print() {
-	fmt.Fprintln(d.writer, "DEBUG")
 	fmt.Fprintln(d.writer, d.line)
 }
 

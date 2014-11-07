@@ -1,24 +1,25 @@
 package lib
 
 import (
-	"fmt"
-	"github.com/codegangsta/cli"
 	"io"
 	"os"
-	//"strings"
+	"strings"
+	"text/template"
+
+	"github.com/codegangsta/cli"
 )
 
-type csvReplaceFactory struct{}
+type csvTemplateFactory struct{}
 
-type csvReplace struct {
+type csvTemplate struct {
 	separator string
 	template  string
 	line      string
 	writer    io.Writer
 }
 
-func (f *csvReplaceFactory) make(line string, context *cli.Context) task {
-	return &csvReplace{
+func (f *csvTemplateFactory) make(line string, context *cli.Context) task {
+	return &csvTemplate{
 		line:      line,
 		writer:    os.Stdout,
 		template:  context.String("out"),
@@ -26,29 +27,29 @@ func (f *csvReplaceFactory) make(line string, context *cli.Context) task {
 	}
 }
 
-func (d *csvReplace) print() {
-	//values := strings.Split(d.line, ",")
-
-	fmt.Fprintln(d.writer, d.template)
+func (d *csvTemplate) print() {
+	values := strings.Split(d.line, d.separator)
+	tmpl, _ := template.New("csv").Parse(d.template + "\n")
+	tmpl.Execute(d.writer, values)
 }
 
-func (d *csvReplace) process() {
+func (d *csvTemplate) process() {
 	return
 }
 
-func AddCsvReplace() cli.Command {
+func AddCSVTemplate() cli.Command {
 	return cli.Command{
-		Name:      "csvReplace",
+		Name:      "csvTemplate",
 		ShortName: "c",
 		Usage:     "change csv input",
 		Action: func(c *cli.Context) {
-			d := csvReplaceFactory{}
+			d := csvTemplateFactory{}
 			Run(&d, c)
 		},
 		Flags: []cli.Flag{
 			cli.StringFlag{
 				Name:  "out",
-				Value: "[...3],[4],[5...6],[7][8...]",
+				Value: "{{. index 1}},{{. index 2}}",
 				Usage: "new line constructed from the args of the input",
 			},
 			cli.StringFlag{

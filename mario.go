@@ -13,7 +13,7 @@ func main() {
 	app.Usage = "mama-mia I love pipes. Pipe input to me and I'll do amazing things."
 	app.Commands = []cli.Command{
 		lib.AddDebug(),
-		lib.AddCsvReplace(),
+		lib.AddCSVTemplate(),
 	}
 	app.Run(os.Args)
 }
