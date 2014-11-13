@@ -14,6 +14,7 @@ func main() {
 	app.Commands = []cli.Command{
 		cmd.AddDebug(),
 		cmd.AddCSVTemplate(),
+		cmd.AddHTTP(),
 	}
 	app.Run(os.Args)
 }
