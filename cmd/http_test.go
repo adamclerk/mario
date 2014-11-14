@@ -6,21 +6,26 @@ import (
 	"testing"
 )
 
-type httpTest struct {
-	line string
+type httpProcessTest struct {
+	line     string
+	expected string
 }
 
-var httpTestCases = []httpTest{
-	{"one,two,three"},
-	{"two,three,four"},
-	{"club,breakfast"},
+var httpProcessTestCases = []httpProcessTest{
+/*{"one,two,three", ""},
+  {"two,three,four", ""},
+  {"club,breakfast", ""},*/
 }
+
+func TestHttpPrint(t *testing.T) {}
+
+func TestHttpMake(t *testing.T) {}
 
 func TestHTTPProcess(t *testing.T) {
-	for _, test := range httpTestCases {
+	for _, test := range httpProcessTestCases {
 		r, w := io.Pipe()
 		go func() {
-			cmd := http{line: test.line, writer: w}
+			cmd := http{writer: w}
 			cmd.Print()
 			w.Close()
 		}()
